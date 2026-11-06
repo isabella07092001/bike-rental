@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Power Bike logo: pink bicycle with a woman with a ponytail">
+  <title>Power Bike</title>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- wheels -->
+    <circle cx="14" cy="46" r="10.5" stroke="#e91e63" stroke-width="3.5"/>
+    <circle cx="50" cy="46" r="10.5" stroke="#e91e63" stroke-width="3.5"/>
+    <circle cx="14" cy="46" r="2" fill="#e91e63" stroke="none"/>
+    <circle cx="50" cy="46" r="2" fill="#e91e63" stroke="none"/>
+    <!-- frame: rear hub, crank, head tube, seat; fork; seat post; handlebar -->
+    <path d="M14 46 L30 46 L44 31 L26 31 Z" stroke="#e91e63" stroke-width="3.5"/>
+    <path d="M30 46 L24 26" stroke="#e91e63" stroke-width="3.5"/>
+    <path d="M44 31 L50 46" stroke="#e91e63" stroke-width="3.5"/>
+    <path d="M44 31 L42 24 L47 23" stroke="#e91e63" stroke-width="3"/>
+    <path d="M21 25 L28 25" stroke="#ad1457" stroke-width="3.5"/>
+    <!-- rider: ponytail, head, torso, arm, leg -->
+    <path d="M30.5 8 C25.5 6.5 21.5 9.5 21 13.5 C20.6 16.5 19.5 18.5 17 19.5" stroke="#ad1457" stroke-width="3.4"/>
+    <circle cx="30.4" cy="8.1" r="1.7" fill="#f8bbd0" stroke="none"/>
+    <circle cx="35" cy="10" r="5" fill="#ad1457" stroke="none"/>
+    <path d="M25 24 L33 15.5" stroke="#ad1457" stroke-width="4.5"/>
+    <path d="M33 16.5 L42 24" stroke="#ad1457" stroke-width="3"/>
+    <path d="M25 24 L34 33 L31 44" stroke="#ad1457" stroke-width="3.5"/>
+    <path d="M28.5 44 L33.5 44" stroke="#ad1457" stroke-width="3"/>
+  </g>
+</svg>

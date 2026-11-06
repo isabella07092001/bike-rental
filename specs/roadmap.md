@@ -63,6 +63,8 @@ the domain layer and tested before the UI is built on top.
 
 ## Phase 5 – Polish (optional)
 
+- [x] Branding: shop name **Power Bike**, pink/rose design (colour tokens in `web/style.css`),
+      logo `web/logo.svg` (pink bicycle with a woman rider with a ponytail), also used as favicon
 - [ ] Seed data for demos (a few bikes, persons, reservations)
 - [ ] Consistent error messages in the UI
 - [ ] Simple filtering/search in lists

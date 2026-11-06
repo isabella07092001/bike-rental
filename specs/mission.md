@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Build a **bike rental management system** for the bike rental shop owned by **Alice and Bob**.
+Build a **bike rental management system** for **Power Bike**, the bike rental shop owned by **Alice and Bob**.
 The system replaces manual bookkeeping with a simple web application that lets the owners
 manage their bikes, their customers and their reservations in one place.
 

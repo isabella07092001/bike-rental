@@ -1,4 +1,4 @@
-// Command bike-rental starts the HTTP server for the bike rental management prototype.
+// Command bike-rental starts the HTTP server for the Power Bike rental management prototype.
 package main
 
 import (
