@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "bike-rental",
+      "runtimeExecutable": "go",
+      "runtimeArgs": ["run", "."],
+      "port": 8080
+    }
+  ]
+}
