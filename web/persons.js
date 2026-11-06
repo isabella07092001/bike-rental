@@ -173,6 +173,9 @@ const personsPage = (() => {
     form.addEventListener("submit", submit);
     cancelBtn.addEventListener("click", resetForm);
     showArchived.addEventListener("change", loadPersons);
+    window.addEventListener("hashchange", () => {
+      if (location.hash === "#persons") loadPersons();
+    });
     replaceInput.addEventListener("change", replaceDocument);
     let timer;
     search.addEventListener("input", () => {

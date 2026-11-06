@@ -8,7 +8,6 @@ import (
 	"testing"
 
 	"bike-rental/internal/domain"
-	"bike-rental/internal/store"
 )
 
 // do sends a request to router and decodes the JSON response into out (if non-nil).
@@ -31,7 +30,7 @@ func do(t *testing.T, router http.Handler, method, path, body string, out any) i
 }
 
 func newTestRouter() http.Handler {
-	return NewRouter("", store.NewMemoryStore(), store.NewPersonMemoryStore())
+	return NewRouter("", newTestDeps())
 }
 
 func TestBikeLifecycle(t *testing.T) {

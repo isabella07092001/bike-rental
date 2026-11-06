@@ -135,6 +135,10 @@ const bikesPage = (() => {
     form.addEventListener("submit", submit);
     cancelBtn.addEventListener("click", resetForm);
     showRetired.addEventListener("change", loadBikes);
+    // Reservations may have changed what can be retired; reload when the page is opened.
+    window.addEventListener("hashchange", () => {
+      if (location.hash === "#bikes") loadBikes();
+    });
     try {
       await loadCategories();
     } catch (err) {

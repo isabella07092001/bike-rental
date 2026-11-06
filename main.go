@@ -16,8 +16,12 @@ func main() {
 	addr := ":" + envOr("PORT", "8080")
 
 	srv := &http.Server{
-		Addr:              addr,
-		Handler:           handler.NewRouter("web", store.NewMemoryStore(), store.NewPersonMemoryStore()),
+		Addr: addr,
+		Handler: handler.NewRouter("web", handler.Deps{
+			Bikes:        store.NewMemoryStore(),
+			Persons:      store.NewPersonMemoryStore(),
+			Reservations: store.NewReservationMemoryStore(),
+		}),
 		ReadHeaderTimeout: 5 * time.Second,
 	}
 

@@ -1,5 +1,5 @@
 // Package handler contains the HTTP handlers. Handlers stay thin: they parse the request,
-// call into the domain and store, and write a JSON response.
+// call into the domain, booking service and stores, and write a JSON response.
 package handler
 
 import (
@@ -7,22 +7,47 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"time"
 
+	"bike-rental/internal/booking"
 	"bike-rental/internal/domain"
 	"bike-rental/internal/store"
 )
 
+// Deps are the stores and the clock the handlers work with.
+type Deps struct {
+	Bikes        store.BikeStore
+	Persons      store.PersonStore
+	Reservations store.ReservationStore
+	// Now is the clock; nil means time.Now. Tests inject a fixed time.
+	Now func() time.Time
+}
+
 // NewRouter wires all API routes and serves the static frontend from webDir.
-func NewRouter(webDir string, bikes store.BikeStore, persons store.PersonStore) http.Handler {
+func NewRouter(webDir string, d Deps) http.Handler {
+	if d.Now == nil {
+		d.Now = time.Now
+	}
+	bookings := booking.New(d.Bikes, d.Persons, d.Reservations, d.Now)
+
 	mux := http.NewServeMux()
-
 	mux.HandleFunc("GET /api/health", handleHealth)
-	NewBikeHandler(bikes).Register(mux)
-	NewPersonHandler(persons).Register(mux)
+	NewBikeHandler(d.Bikes, bookings.BikeHasOpenReservations).Register(mux)
+	NewPersonHandler(d.Persons, d.Now, bookings.PersonHasOpenReservations).Register(mux)
+	NewReservationHandler(bookings, d.Reservations, d.Bikes, d.Persons).Register(mux)
 
-	mux.Handle("GET /", http.FileServer(http.Dir(webDir)))
+	mux.Handle("GET /", noCache(http.FileServer(http.Dir(webDir))))
 
 	return mux
+}
+
+// noCache makes browsers revalidate static files on every load (cheap 304 via Last-Modified),
+// so an updated frontend is never mixed with stale cached scripts.
+func noCache(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", "no-cache")
+		next.ServeHTTP(w, r)
+	})
 }
 
 func handleHealth(w http.ResponseWriter, _ *http.Request) {

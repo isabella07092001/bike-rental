@@ -28,11 +28,20 @@ const idDocumentField = "idDocument"
 type PersonHandler struct {
 	store store.PersonStore
 	now   func() time.Time
+	// hasOpenReservations reports whether a person has upcoming or active bookings;
+	// such persons cannot be archived.
+	hasOpenReservations func(personID string) bool
 }
 
-// NewPersonHandler returns a handler backed by s.
-func NewPersonHandler(s store.PersonStore) *PersonHandler {
-	return &PersonHandler{store: s, now: time.Now}
+// NewPersonHandler returns a handler backed by s. now and hasOpenReservations may be nil.
+func NewPersonHandler(s store.PersonStore, now func() time.Time, hasOpenReservations func(personID string) bool) *PersonHandler {
+	if now == nil {
+		now = time.Now
+	}
+	if hasOpenReservations == nil {
+		hasOpenReservations = func(string) bool { return false }
+	}
+	return &PersonHandler{store: s, now: now, hasOpenReservations: hasOpenReservations}
 }
 
 // Register adds the person routes to mux.
@@ -235,6 +244,11 @@ func (h *PersonHandler) setArchived(w http.ResponseWriter, r *http.Request, arch
 	e, err := h.store.Get(r.PathValue("id"))
 	if err != nil {
 		writeError(w, err)
+		return
+	}
+	if archived && !e.Person.Archived && h.hasOpenReservations(e.Person.ID) {
+		writeError(w, fmt.Errorf("%w: %s has upcoming or active reservations and cannot be archived",
+			domain.ErrConflict, e.Person.FullName()))
 		return
 	}
 	if archived {

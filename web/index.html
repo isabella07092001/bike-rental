@@ -113,7 +113,52 @@
 
     <section id="reservations" class="page">
       <h2>Reservations</h2>
-      <p>Reservation management – coming in Phase 3.</p>
+
+      <form id="reservation-form" class="card" autocomplete="off">
+        <h3 id="reservation-form-title">New reservation</h3>
+        <input type="hidden" name="id">
+        <div class="fields">
+          <label class="wide">Person
+            <select name="personId" required></select>
+          </label>
+          <label>Start
+            <input name="start" type="datetime-local" required step="300">
+          </label>
+          <label>End
+            <input name="end" type="datetime-local" required step="300">
+          </label>
+        </div>
+        <fieldset id="reservation-bikes" class="bike-choice">
+          <legend>Bikes</legend>
+          <p class="muted">Choose start and end to see the available bikes.</p>
+        </fieldset>
+        <p id="reservation-quote" class="quote" aria-live="polite"></p>
+        <p id="reservation-form-error" class="error" role="alert"></p>
+        <div class="buttons">
+          <button type="submit" class="primary">Book</button>
+          <button type="button" id="reservation-cancel-edit" hidden>Cancel editing</button>
+        </div>
+      </form>
+
+      <div class="toolbar">
+        <label>Show
+          <select id="reservation-phase">
+            <option value="">All reservations</option>
+            <option value="upcoming" selected>Upcoming</option>
+            <option value="active">Active</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </label>
+        <span class="muted">Rules: 30 min – 48 h, billed per started hour, 30 min gap between rentals, changes until 24 h before start.</span>
+      </div>
+      <p id="reservation-list-error" class="error" role="alert"></p>
+      <table>
+        <thead>
+          <tr><th>Period</th><th>Person</th><th>Bikes</th><th>Price</th><th>Status</th><th></th></tr>
+        </thead>
+        <tbody id="reservation-rows"></tbody>
+      </table>
     </section>
   </main>
 
@@ -121,5 +166,6 @@
   <script src="app.js"></script>
   <script src="bikes.js"></script>
   <script src="persons.js"></script>
+  <script src="reservations.js"></script>
 </body>
 </html>

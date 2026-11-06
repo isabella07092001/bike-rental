@@ -37,17 +37,18 @@ the domain layer and tested before the UI is built on top.
 
 ## Phase 3 – Reservation Management
 
-- [ ] Domain: `Reservation` (ID, person, bikes, start, end, status, total price)
-- [ ] Rule: person must have identification number **and** uploaded ID document
-- [ ] Rule: duration between 30 minutes and 48 hours
-- [ ] Rule: price = hours × hourly category price (summed over all bikes)
-- [ ] Rule: a bike cannot be double-booked for overlapping periods
-- [ ] Rule: cancellation only allowed ≥ 24 hours before rental start
-- [ ] API: create, list, get, cancel reservations
-- [ ] Frontend: reservation list, create form with live price preview, cancel button
+- [x] Domain: `Reservation` (ID, person, ID number snapshot, one or more bikes, start, end, status, total price)
+- [x] Rule: person must have identification number **and** uploaded ID document
+- [x] Rule: duration between 30 minutes and 48 hours
+- [x] Rule: price = started hours (rounded up) × hourly category price (summed over all bikes)
+- [x] Rule: a bike cannot be double-booked; at least 30 minutes between two rentals
+- [x] Rule: cancellation and editing only allowed ≥ 24 hours before rental start
+- [x] Hooks: retiring a bike / archiving a person with open reservations is rejected
+- [x] API: create, list, get, edit, cancel reservations; price quote; available bikes
+- [x] Frontend: reservation list, create/edit form with live price preview, cancel button
       (disabled when the deadline has passed)
-- [ ] Tests: table-driven tests for every rule incl. boundary values
-      (29/30 min, 48 h/48 h 1 min, exactly 24 h before start)
+- [x] Tests: table-driven tests for every rule incl. boundary values
+      (29/30 min, 48 h/48 h 1 min, 60/61 min, 29/30 min gap, exactly 24 h before start)
 
 **Done when:** all stakeholder rules are enforced by the backend and covered by tests.
 
@@ -76,5 +77,5 @@ the domain layer and tested before the UI is built on top.
 
 ## Open Questions to Resolve
 
-See [mission.md → Open Questions](mission.md#open-questions). Pricing granularity and
-multi-bike reservations should be clarified **before Phase 3**.
+See [mission.md → Open Questions](mission.md#open-questions). Billing, multi-bike reservations
+and the buffer between rentals were decided in the Phase 3 spec; concrete prices are still open.

@@ -15,11 +15,25 @@ const maxBodyBytes = 1 << 20
 // BikeHandler serves the /api/bikes and /api/categories endpoints.
 type BikeHandler struct {
 	store store.BikeStore
+	// hasOpenReservations reports whether a bike has upcoming or active bookings;
+	// such bikes cannot be retired.
+	hasOpenReservations func(bikeID string) bool
 }
 
-// NewBikeHandler returns a handler backed by s.
-func NewBikeHandler(s store.BikeStore) *BikeHandler {
-	return &BikeHandler{store: s}
+// NewBikeHandler returns a handler backed by s. hasOpenReservations may be nil.
+func NewBikeHandler(s store.BikeStore, hasOpenReservations func(bikeID string) bool) *BikeHandler {
+	if hasOpenReservations == nil {
+		hasOpenReservations = func(string) bool { return false }
+	}
+	return &BikeHandler{store: s, hasOpenReservations: hasOpenReservations}
+}
+
+// checkRetire rejects retiring a bike that still has upcoming or active reservations.
+func (h *BikeHandler) checkRetire(old, updated domain.Bike) error {
+	if updated.IsRetired() && !old.IsRetired() && h.hasOpenReservations(old.ID) {
+		return fmt.Errorf("%w: %s has upcoming or active reservations and cannot be retired", domain.ErrConflict, old.Name)
+	}
+	return nil
 }
 
 // Register adds the bike routes to mux.
@@ -127,7 +141,8 @@ func (h *BikeHandler) create(w http.ResponseWriter, r *http.Request) {
 
 func (h *BikeHandler) update(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
-	if _, err := h.store.Get(id); err != nil {
+	old, err := h.store.Get(id)
+	if err != nil {
 		writeError(w, err)
 		return
 	}
@@ -138,6 +153,10 @@ func (h *BikeHandler) update(w http.ResponseWriter, r *http.Request) {
 	}
 	b := in.toBike(id)
 	b.Normalize()
+	if err := h.checkRetire(old, b); err != nil {
+		writeError(w, err)
+		return
+	}
 	if err := b.Validate(); err != nil {
 		writeError(w, err)
 		return
@@ -156,7 +175,12 @@ func (h *BikeHandler) retire(w http.ResponseWriter, r *http.Request) {
 		writeError(w, err)
 		return
 	}
+	old := b
 	b.Retire()
+	if err := h.checkRetire(old, b); err != nil {
+		writeError(w, err)
+		return
+	}
 	updated, err := h.store.Update(b)
 	if err != nil {
 		writeError(w, err)
