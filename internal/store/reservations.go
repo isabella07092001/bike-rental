@@ -63,7 +63,7 @@ func (s *ReservationMemoryStore) Get(id string) (domain.Reservation, error) {
 
 	r, ok := s.reservations[id]
 	if !ok {
-		return domain.Reservation{}, fmt.Errorf("reservation %q: %w", id, domain.ErrNotFound)
+		return domain.Reservation{}, fmt.Errorf("%w: reservation %q not found", domain.ErrNotFound, id)
 	}
 	return copyReservation(r), nil
 }
@@ -88,7 +88,7 @@ func (s *ReservationMemoryStore) Update(r domain.Reservation) (domain.Reservatio
 	defer s.mu.Unlock()
 
 	if _, ok := s.reservations[r.ID]; !ok {
-		return domain.Reservation{}, fmt.Errorf("reservation %q: %w", r.ID, domain.ErrNotFound)
+		return domain.Reservation{}, fmt.Errorf("%w: reservation %q not found", domain.ErrNotFound, r.ID)
 	}
 	if err := s.checkConflicts(r, r.ID); err != nil {
 		return domain.Reservation{}, err

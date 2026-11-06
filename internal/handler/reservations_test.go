@@ -309,3 +309,27 @@ func TestRetireAndArchiveHooks(t *testing.T) {
 		t.Errorf("archive after cancel: %d", code)
 	}
 }
+
+func TestReservationSearch(t *testing.T) {
+	f := newResFixture(t)
+	f.book(t, f.alice.ID, []string{f.city.ID}, tm(10, 0), tm(11, 0))
+	f.book(t, f.bob.ID, []string{f.kids.ID}, tm(10, 0), tm(11, 0))
+
+	tests := []struct {
+		query string
+		want  int
+	}{
+		{"?q=alice", 1},
+		{"?q=TEST", 2},   // last name of both
+		{"?q=kids-0", 1}, // bike name
+		{"?q=id-bob", 1}, // ID number
+		{"?q=nobody", 0},
+		{"?q=city&phase=cancelled", 0},
+	}
+	for _, tt := range tests {
+		var list []reservationView
+		if code := do(t, f.router, http.MethodGet, "/api/reservations"+tt.query, "", &list); code != http.StatusOK || len(list) != tt.want {
+			t.Errorf("%s: %d, %d results; want %d", tt.query, code, len(list), tt.want)
+		}
+	}
+}

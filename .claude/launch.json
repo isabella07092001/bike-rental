@@ -4,7 +4,7 @@
     {
       "name": "bike-rental",
       "runtimeExecutable": "go",
-      "runtimeArgs": ["run", "."],
+      "runtimeArgs": ["run", ".", "-demo"],
       "port": 8080
     }
   ]

@@ -81,8 +81,10 @@ func (h *BikeHandler) listCategories(w http.ResponseWriter, _ *http.Request) {
 }
 
 // list returns non-retired bikes by default. ?status= and ?category= filter the result;
-// ?status=retired is the only way to see retired bikes in the list.
+// ?status=retired is the only way to see retired bikes in the list. ?q= searches name
+// and description.
 func (h *BikeHandler) list(w http.ResponseWriter, r *http.Request) {
+	q := searchQuery(r)
 	category := domain.Category(r.URL.Query().Get("category"))
 	if category != "" && !category.Valid() {
 		writeError(w, fmt.Errorf("%w: unknown category %q", domain.ErrInvalid, category))
@@ -103,6 +105,9 @@ func (h *BikeHandler) list(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 		if status == "" && b.IsRetired() {
+			continue
+		}
+		if !matchesAny(q, b.Name, b.Description) {
 			continue
 		}
 		result = append(result, b)

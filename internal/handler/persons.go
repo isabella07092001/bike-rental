@@ -9,7 +9,6 @@ import (
 	"mime"
 	"net/http"
 	"strconv"
-	"strings"
 	"time"
 
 	"bike-rental/internal/domain"
@@ -92,28 +91,16 @@ func (h *PersonHandler) list(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-	q := strings.ToLower(strings.TrimSpace(r.URL.Query().Get("q")))
+	q := searchQuery(r)
 
 	result := []personResponse{}
 	for _, e := range h.store.List() {
-		if e.Person.Archived != archived || !matches(e.Person, q) {
+		if e.Person.Archived != archived || !matchesAny(q, e.Person.FullName(), e.Person.LastName+" "+e.Person.FirstName, e.Person.IDNumber, e.Person.Phone) {
 			continue
 		}
 		result = append(result, toResponse(e))
 	}
 	writeJSON(w, http.StatusOK, result)
-}
-
-func matches(p domain.Person, q string) bool {
-	if q == "" {
-		return true
-	}
-	for _, field := range []string{p.FullName(), p.LastName + " " + p.FirstName, p.IDNumber, p.Phone} {
-		if strings.Contains(strings.ToLower(field), q) {
-			return true
-		}
-	}
-	return false
 }
 
 func (h *PersonHandler) get(w http.ResponseWriter, r *http.Request) {

@@ -9,6 +9,8 @@ const bikesPage = (() => {
   const formError = document.getElementById("bike-form-error");
   const cancelBtn = document.getElementById("bike-cancel");
   const showRetired = document.getElementById("show-retired");
+  const search = document.getElementById("bike-search");
+  const categoryFilter = document.getElementById("bike-category-filter");
   const tableBody = document.getElementById("bike-rows");
   const listError = document.getElementById("bike-list-error");
 
@@ -21,13 +23,22 @@ const bikesPage = (() => {
     fields.category.replaceChildren(
       ...categories.map((c) => new Option(`${c.label} (${formatCents(c.hourlyPriceCents)}/h)`, c.value))
     );
+    categoryFilter.replaceChildren(new Option("All categories", ""), ...categories.map((c) => new Option(c.label, c.value)));
+  }
+
+  function isFiltered() {
+    return search.value.trim() !== "" || categoryFilter.value !== "";
   }
 
   async function loadBikes() {
     listError.textContent = "";
+    const params = new URLSearchParams();
+    if (search.value.trim()) params.set("q", search.value.trim());
+    if (categoryFilter.value) params.set("category", categoryFilter.value);
     try {
-      const active = await api("GET", "/api/bikes");
-      const retired = showRetired.checked ? await api("GET", "/api/bikes?status=retired") : [];
+      const active = await api("GET", `/api/bikes?${params}`);
+      params.set("status", "retired");
+      const retired = showRetired.checked ? await api("GET", `/api/bikes?${params}`) : [];
       renderRows([...active, ...retired]);
     } catch (err) {
       listError.textContent = err.message;
@@ -40,7 +51,7 @@ const bikesPage = (() => {
       const cell = row.insertCell();
       cell.colSpan = 6;
       cell.className = "empty";
-      cell.textContent = "No bikes yet.";
+      cell.textContent = isFiltered() ? "No matching bikes." : "No bikes yet.";
       tableBody.replaceChildren(row);
       return;
     }
@@ -135,6 +146,12 @@ const bikesPage = (() => {
     form.addEventListener("submit", submit);
     cancelBtn.addEventListener("click", resetForm);
     showRetired.addEventListener("change", loadBikes);
+    categoryFilter.addEventListener("change", loadBikes);
+    let timer;
+    search.addEventListener("input", () => {
+      clearTimeout(timer);
+      timer = setTimeout(loadBikes, 250);
+    });
     // Reservations may have changed what can be retired; reload when the page is opened.
     window.addEventListener("hashchange", () => {
       if (location.hash === "#bikes") loadBikes();

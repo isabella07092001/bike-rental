@@ -7,7 +7,10 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"strings"
 	"time"
+	"unicode"
+	"unicode/utf8"
 
 	"bike-rental/internal/booking"
 	"bike-rental/internal/dashboard"
@@ -79,13 +82,28 @@ func writeError(w http.ResponseWriter, err error) {
 	case errors.Is(err, domain.ErrTooLarge), errors.As(err, &maxBytesErr):
 		status = http.StatusRequestEntityTooLarge
 	}
-	msg := err.Error()
+	msg := userMessage(err)
 	switch status {
 	case http.StatusInternalServerError:
 		log.Printf("internal error: %v", err)
-		msg = "internal server error"
+		msg = "Something went wrong on the server. Please try again."
 	case http.StatusRequestEntityTooLarge:
-		msg = "request too large: the ID copy must be at most 5 MB"
+		msg = "The ID copy is too large: it must be at most 5 MB."
 	}
 	writeJSON(w, status, map[string]string{"error": msg})
+}
+
+// userMessage turns "invalid input: name is required" into "Name is required":
+// the technical category prefix of the domain errors is dropped and the first letter
+// is capitalised, so all pages show messages in the same style.
+func userMessage(err error) string {
+	msg := err.Error()
+	for _, sentinel := range []error{domain.ErrInvalid, domain.ErrNotFound, domain.ErrConflict, domain.ErrTooLarge} {
+		if prefix := sentinel.Error() + ": "; errors.Is(err, sentinel) && strings.HasPrefix(msg, prefix) {
+			msg = strings.TrimPrefix(msg, prefix)
+			break
+		}
+	}
+	r, size := utf8.DecodeRuneInString(msg)
+	return string(unicode.ToUpper(r)) + msg[size:]
 }

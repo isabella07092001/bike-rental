@@ -162,7 +162,7 @@ func (s *PersonMemoryStore) checkIDNumberFree(idNumber, exceptID string) error {
 }
 
 func notFound(id string) error {
-	return fmt.Errorf("person %q: %w", id, domain.ErrNotFound)
+	return fmt.Errorf("%w: person %q not found", domain.ErrNotFound, id)
 }
 
 // copyDoc copies the byte slice so callers can never modify stored data.

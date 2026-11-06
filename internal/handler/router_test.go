@@ -2,12 +2,15 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"bike-rental/internal/domain"
 )
 
 func TestHealth(t *testing.T) {
@@ -60,5 +63,23 @@ func TestServesStaticFrontend(t *testing.T) {
 	}
 	if !strings.Contains(rec.Body.String(), "Bike Rental") {
 		t.Errorf("body = %q, want it to contain index.html content", rec.Body.String())
+	}
+}
+
+func TestUserMessage(t *testing.T) {
+	tests := []struct {
+		err  error
+		want string
+	}{
+		{fmt.Errorf("%w: name is required", domain.ErrInvalid), "Name is required"},
+		{fmt.Errorf("%w: bike %q not found", domain.ErrNotFound, "b-9"), `Bike "b-9" not found`},
+		{fmt.Errorf("%w: a bike named %q already exists", domain.ErrConflict, "X"), `A bike named "X" already exists`},
+		{fmt.Errorf("%w: ünknown", domain.ErrInvalid), "Ünknown"},
+		{fmt.Errorf("wrapped: %w", domain.ErrInvalid), "Wrapped: invalid input"},
+	}
+	for _, tt := range tests {
+		if got := userMessage(tt.err); got != tt.want {
+			t.Errorf("userMessage(%q) = %q, want %q", tt.err, got, tt.want)
+		}
 	}
 }

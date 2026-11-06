@@ -117,7 +117,16 @@ func (h *ReservationHandler) view(r domain.Reservation) reservationView {
 	return v
 }
 
-// list returns reservations sorted by start. Filters: ?phase=, ?personId=, ?bikeId=.
+func bikeNames(v reservationView) []string {
+	names := make([]string, len(v.Bikes))
+	for i, b := range v.Bikes {
+		names[i] = b.Name
+	}
+	return names
+}
+
+// list returns reservations sorted by start. Filters: ?phase=, ?personId=, ?bikeId=,
+// and ?q= searching person name, ID number and bike names.
 func (h *ReservationHandler) list(w http.ResponseWriter, r *http.Request) {
 	q := r.URL.Query()
 	phase := domain.ReservationPhase(q.Get("phase"))
@@ -126,6 +135,7 @@ func (h *ReservationHandler) list(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	personID, bikeID := q.Get("personId"), q.Get("bikeId")
+	search := searchQuery(r)
 	now := h.bookings.Now()
 
 	result := []reservationView{}
@@ -139,7 +149,11 @@ func (h *ReservationHandler) list(w http.ResponseWriter, r *http.Request) {
 		if bikeID != "" && !res.HasBike(bikeID) {
 			continue
 		}
-		result = append(result, h.view(res))
+		v := h.view(res)
+		if !matchesAny(search, append([]string{v.PersonName, v.IDNumber}, bikeNames(v)...)...) {
+			continue
+		}
+		result = append(result, v)
 	}
 	writeJSON(w, http.StatusOK, result)
 }

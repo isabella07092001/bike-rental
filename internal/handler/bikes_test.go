@@ -128,13 +128,13 @@ func TestBikeErrors(t *testing.T) {
 		wantStatus               int
 		wantError                string
 	}{
-		{"empty name", http.MethodPost, "/api/bikes", `{"name":" ","category":"city"}`, 400, "name is required"},
-		{"unknown category", http.MethodPost, "/api/bikes", `{"name":"X","category":"tandem"}`, 400, "unknown category"},
-		{"unknown status", http.MethodPost, "/api/bikes", `{"name":"X","category":"city","status":"rented"}`, 400, "unknown status"},
-		{"too long description", http.MethodPost, "/api/bikes", `{"name":"X","category":"city","description":"` + strings.Repeat("x", 501) + `"}`, 400, "description"},
+		{"empty name", http.MethodPost, "/api/bikes", `{"name":" ","category":"city"}`, 400, "Name is required"},
+		{"unknown category", http.MethodPost, "/api/bikes", `{"name":"X","category":"tandem"}`, 400, "Unknown category"},
+		{"unknown status", http.MethodPost, "/api/bikes", `{"name":"X","category":"city","status":"rented"}`, 400, "Unknown status"},
+		{"too long description", http.MethodPost, "/api/bikes", `{"name":"X","category":"city","description":"` + strings.Repeat("x", 501) + `"}`, 400, "Description must be at most"},
 		{"invalid json", http.MethodPost, "/api/bikes", `{`, 400, "not valid JSON"},
 		{"duplicate name", http.MethodPost, "/api/bikes", `{"name":"taken","category":"racing"}`, 409, "already exists"},
-		{"invalid list filter", http.MethodGet, "/api/bikes?category=tandem", "", 400, "unknown category"},
+		{"invalid list filter", http.MethodGet, "/api/bikes?category=tandem", "", 400, "Unknown category"},
 		{"get unknown", http.MethodGet, "/api/bikes/b-99", "", 404, "not found"},
 		{"update unknown", http.MethodPut, "/api/bikes/b-99", `{"name":"X","category":"city"}`, 404, "not found"},
 		{"retire unknown", http.MethodPost, "/api/bikes/b-99/retire", "", 404, "not found"},
@@ -163,5 +163,37 @@ func TestListCategories(t *testing.T) {
 	}
 	if cats[1].Value != domain.CategoryCity || cats[1].Label != "City bike" || cats[1].HourlyPriceCents != 600 {
 		t.Errorf("cats[1] = %+v", cats[1])
+	}
+}
+
+func TestBikeSearch(t *testing.T) {
+	router := newTestRouter()
+	for _, body := range []string{
+		`{"name":"City-01","category":"city","description":"red Gazelle"}`,
+		`{"name":"City-02","category":"city","description":"blue"}`,
+		`{"name":"MTB-01","category":"mountain","description":"Red Cube"}`,
+	} {
+		do(t, router, http.MethodPost, "/api/bikes", body, nil)
+	}
+	tests := []struct {
+		query string
+		want  string
+	}{
+		{"?q=city", "City-01,City-02"},
+		{"?q=RED", "City-01,MTB-01"},
+		{"?q=red&category=mountain", "MTB-01"},
+		{"?q=+gazelle+", "City-01"},
+		{"?q=nothing", ""},
+	}
+	for _, tt := range tests {
+		var bikes []domain.Bike
+		do(t, router, http.MethodGet, "/api/bikes"+tt.query, "", &bikes)
+		names := make([]string, len(bikes))
+		for i, b := range bikes {
+			names[i] = b.Name
+		}
+		if got := strings.Join(names, ","); got != tt.want {
+			t.Errorf("%s: %q, want %q", tt.query, got, tt.want)
+		}
 	}
 }

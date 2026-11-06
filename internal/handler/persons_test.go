@@ -211,8 +211,8 @@ func TestPersonErrors(t *testing.T) {
 		{"empty ID copy", http.MethodPost, "/api/persons", upload{fields: personFields("Bob", "S", "B1"), fileName: "x.pdf", file: []byte{}}, 400, "empty"},
 		{"text renamed to pdf", http.MethodPost, "/api/persons", upload{fields: personFields("Bob", "S", "B1"), fileName: "x.pdf", file: []byte("plain text")}, 400, "PDF, JPG or PNG"},
 		{"too large", http.MethodPost, "/api/persons", upload{fields: personFields("Bob", "S", "B1"), fileName: "x.pdf", file: big}, 413, "at most 5 MB"},
-		{"missing last name", http.MethodPost, "/api/persons", upload{fields: personFields("Bob", "", "B1"), fileName: "x.pdf", file: testPDF}, 400, "last name is required"},
-		{"invalid phone", http.MethodPost, "/api/persons", upload{fields: map[string]string{"firstName": "Bob", "lastName": "S", "idNumber": "B1", "phone": "call me"}, fileName: "x.pdf", file: testPDF}, 400, "phone"},
+		{"missing last name", http.MethodPost, "/api/persons", upload{fields: personFields("Bob", "", "B1"), fileName: "x.pdf", file: testPDF}, 400, "Last name is required"},
+		{"invalid phone", http.MethodPost, "/api/persons", upload{fields: map[string]string{"firstName": "Bob", "lastName": "S", "idNumber": "B1", "phone": "call me"}, fileName: "x.pdf", file: testPDF}, 400, "Phone may only contain"},
 		{"duplicate ID number", http.MethodPost, "/api/persons", upload{fields: personFields("Eve", "X", "taken1"), fileName: "x.pdf", file: testPDF}, 409, "already exists"},
 		{"replace unknown", http.MethodPut, "/api/persons/p-99/id-document", upload{fileName: "x.pdf", file: testPDF}, 404, "not found"},
 		{"replace without file", http.MethodPut, "/api/persons/" + existing.ID + "/id-document", upload{}, 400, "ID copy is required"},
@@ -240,10 +240,10 @@ func TestPersonErrors(t *testing.T) {
 		{"download unknown", http.MethodGet, "/api/persons/p-99/id-document", "", 404, "not found"},
 		{"update unknown", http.MethodPut, "/api/persons/p-99", `{}`, 404, "not found"},
 		{"update invalid JSON", http.MethodPut, "/api/persons/" + existing.ID, `{`, 400, "not valid JSON"},
-		{"update empty first name", http.MethodPut, "/api/persons/" + existing.ID, `{"firstName":"","lastName":"M","idNumber":"TAKEN1","phone":"12345"}`, 400, "first name is required"},
+		{"update empty first name", http.MethodPut, "/api/persons/" + existing.ID, `{"firstName":"","lastName":"M","idNumber":"TAKEN1","phone":"12345"}`, 400, "First name is required"},
 		{"archive unknown", http.MethodPost, "/api/persons/p-99/archive", "", 404, "not found"},
 		{"reactivate unknown", http.MethodPost, "/api/persons/p-99/reactivate", "", 404, "not found"},
-		{"invalid archived filter", http.MethodGet, "/api/persons?archived=maybe", "", 400, "archived"},
+		{"invalid archived filter", http.MethodGet, "/api/persons?archived=maybe", "", 400, "Archived must be"},
 	}
 	for _, tt := range jsonTests {
 		t.Run(tt.name, func(t *testing.T) {

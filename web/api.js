@@ -1,6 +1,7 @@
-// Small fetch wrapper for the Go JSON API. Throws an Error with the server's
-// {"error": "..."} message for non-2xx responses. A FormData body is sent as
-// multipart/form-data (the browser sets the boundary); anything else as JSON.
+// Small fetch wrapper for the Go JSON API. Throws an Error with a user-facing message:
+// the server's {"error": "..."} text, or a clear note when the server is not reachable.
+// A FormData body is sent as multipart/form-data (the browser sets the boundary);
+// anything else as JSON.
 async function api(method, path, body) {
   const options = { method, headers: {} };
   if (body instanceof FormData) {
@@ -9,10 +10,15 @@ async function api(method, path, body) {
     options.headers["Content-Type"] = "application/json";
     options.body = JSON.stringify(body);
   }
-  const res = await fetch(path, options);
+  let res;
+  try {
+    res = await fetch(path, options);
+  } catch {
+    throw new Error("The server cannot be reached. Is it running?");
+  }
   const data = res.status === 204 ? null : await res.json().catch(() => null);
   if (!res.ok) {
-    throw new Error((data && data.error) || `Request failed (${res.status})`);
+    throw new Error((data && data.error) || `The request failed (HTTP ${res.status}). Please try again.`);
   }
   return data;
 }

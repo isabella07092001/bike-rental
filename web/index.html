@@ -88,6 +88,10 @@
       </form>
 
       <div class="toolbar">
+        <input type="search" id="bike-search" placeholder="Search name or description" aria-label="Search bikes">
+        <label>Category
+          <select id="bike-category-filter"><option value="">All categories</option></select>
+        </label>
         <label><input type="checkbox" id="show-retired"> Show retired bikes</label>
       </div>
       <p id="bike-list-error" class="error" role="alert"></p>
@@ -173,6 +177,7 @@
       </form>
 
       <div class="toolbar">
+        <input type="search" id="reservation-search" placeholder="Search person, ID number or bike" aria-label="Search reservations">
         <label>Show
           <select id="reservation-phase">
             <option value="">All reservations</option>

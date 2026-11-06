@@ -65,10 +65,13 @@ the domain layer and tested before the UI is built on top.
 
 - [x] Branding: shop name **Power Bike**, pink/rose design (colour tokens in `web/style.css`),
       logo `web/logo.svg` (pink bicycle with a woman rider with a ponytail), also used as favicon
-- [ ] Seed data for demos (a few bikes, persons, reservations)
-- [ ] Consistent error messages in the UI
-- [ ] Simple filtering/search in lists
-- [ ] README section on how to run and test the prototype
+- [x] Seed data for demos: `go run . -demo` (bikes in all states, customers with sample ID card,
+      reservations active / completed / upcoming / cancelled around the current time)
+- [x] Consistent error messages: one style for all API errors ("Name is required" instead of
+      "invalid input: name is required"), clear message when the server is unreachable, same error box everywhere
+- [x] Search/filters: bikes (name, description, category), persons (name, ID number, phone),
+      reservations (person, ID number, bike; phase)
+- [x] README section on how to run and test the prototype
 
 ## Later / Out of Scope for the Prototype
 

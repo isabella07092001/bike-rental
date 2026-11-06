@@ -11,6 +11,7 @@ const reservationsPage = (() => {
   const bikeBox = document.getElementById("reservation-bikes");
   const quoteLine = document.getElementById("reservation-quote");
   const phaseFilter = document.getElementById("reservation-phase");
+  const search = document.getElementById("reservation-search");
   const tableBody = document.getElementById("reservation-rows");
   const listError = document.getElementById("reservation-list-error");
 
@@ -224,6 +225,7 @@ const reservationsPage = (() => {
     listError.textContent = "";
     const params = new URLSearchParams();
     if (phaseFilter.value) params.set("phase", phaseFilter.value);
+    if (search.value.trim()) params.set("q", search.value.trim());
     try {
       renderRows(await api("GET", `/api/reservations?${params}`));
     } catch (err) {
@@ -237,7 +239,7 @@ const reservationsPage = (() => {
       const cell = row.insertCell();
       cell.colSpan = 6;
       cell.className = "empty";
-      cell.textContent = "No reservations.";
+      cell.textContent = search.value.trim() ? "No matching reservations." : "No reservations.";
       tableBody.replaceChildren(row);
       return;
     }
@@ -323,6 +325,11 @@ const reservationsPage = (() => {
     form.addEventListener("submit", submit);
     cancelEditBtn.addEventListener("click", resetForm);
     phaseFilter.addEventListener("change", loadReservations);
+    let searchTimer;
+    search.addEventListener("input", () => {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(loadReservations, 250);
+    });
     fields.start.addEventListener("input", scheduleRefresh);
     fields.end.addEventListener("input", scheduleRefresh);
     // Persons and bikes may have changed on the other pages.

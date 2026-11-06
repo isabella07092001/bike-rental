@@ -65,7 +65,7 @@ func (s *MemoryStore) Get(id string) (domain.Bike, error) {
 
 	b, ok := s.bikes[id]
 	if !ok {
-		return domain.Bike{}, fmt.Errorf("bike %q: %w", id, domain.ErrNotFound)
+		return domain.Bike{}, fmt.Errorf("%w: bike %q not found", domain.ErrNotFound, id)
 	}
 	return b, nil
 }
@@ -90,7 +90,7 @@ func (s *MemoryStore) Update(b domain.Bike) (domain.Bike, error) {
 	defer s.mu.Unlock()
 
 	if _, ok := s.bikes[b.ID]; !ok {
-		return domain.Bike{}, fmt.Errorf("bike %q: %w", b.ID, domain.ErrNotFound)
+		return domain.Bike{}, fmt.Errorf("%w: bike %q not found", domain.ErrNotFound, b.ID)
 	}
 	if err := s.checkNameFree(b.Name, b.ID); err != nil {
 		return domain.Bike{}, err

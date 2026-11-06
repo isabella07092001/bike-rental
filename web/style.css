@@ -101,7 +101,16 @@ a { color: var(--pink-700); }
 }
 
 .muted { color: var(--text-muted); font-size: 0.85rem; }
-.error { color: var(--error); min-height: 1em; margin: 0.5rem 0; font-size: 0.9rem; }
+/* All error lines look the same: hidden while empty, a soft red box with an icon when set. */
+.error { color: var(--error); margin: 0.5rem 0; font-size: 0.9rem; }
+p.error:empty { display: none; }
+p.error:not(:empty) {
+  padding: 0.5rem 0.75rem;
+  background: var(--bad-bg);
+  border: 1px solid #f5c2c2;
+  border-radius: 8px;
+}
+p.error:not(:empty)::before { content: "⚠ "; }
 .nowrap { white-space: nowrap; }
 
 /* ---- forms ---- */
@@ -166,6 +175,7 @@ tbody tr:last-child td { border-bottom: none; }
 tbody tr:hover td { background: var(--pink-50); }
 th { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.03em; color: var(--pink-800); background: var(--pink-100); }
 th.num, td.num { text-align: right; font-variant-numeric: tabular-nums; }
+th, #bike-rows td:first-child { white-space: nowrap; }
 td.actions { white-space: nowrap; text-align: right; }
 td.actions button + button { margin-left: 0.4rem; }
 td.empty { color: var(--text-muted); text-align: center; }
