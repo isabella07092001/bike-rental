@@ -69,7 +69,46 @@
 
     <section id="persons" class="page">
       <h2>Persons</h2>
-      <p>Person management – coming in Phase 2.</p>
+
+      <form id="person-form" class="card" autocomplete="off">
+        <h3 id="person-form-title">New person</h3>
+        <input type="hidden" name="id">
+        <div class="fields">
+          <label>First name
+            <input name="firstName" required maxlength="100">
+          </label>
+          <label>Last name
+            <input name="lastName" required maxlength="100">
+          </label>
+          <label>ID number
+            <input name="idNumber" required maxlength="30" placeholder="e.g. L01X00T47">
+          </label>
+          <label>Phone
+            <input name="phone" type="tel" required maxlength="30" placeholder="e.g. +49 170 1234567">
+          </label>
+          <label id="person-file-label" class="wide">ID copy (PDF, JPG or PNG, max. 5 MB)
+            <input name="idDocument" type="file" required accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png">
+          </label>
+        </div>
+        <p id="person-form-error" class="error" role="alert"></p>
+        <div class="buttons">
+          <button type="submit" class="primary">Save</button>
+          <button type="button" id="person-cancel" hidden>Cancel</button>
+        </div>
+      </form>
+
+      <div class="toolbar">
+        <input type="search" id="person-search" placeholder="Search name, ID number or phone" aria-label="Search persons">
+        <label><input type="checkbox" id="show-archived"> Show archived persons</label>
+      </div>
+      <p id="person-list-error" class="error" role="alert"></p>
+      <table>
+        <thead>
+          <tr><th>Name</th><th>ID number</th><th>Phone</th><th>ID copy</th><th></th></tr>
+        </thead>
+        <tbody id="person-rows"></tbody>
+      </table>
+      <input type="file" id="person-replace-file" hidden accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png">
     </section>
 
     <section id="reservations" class="page">
@@ -81,5 +120,6 @@
   <script src="api.js"></script>
   <script src="app.js"></script>
   <script src="bikes.js"></script>
+  <script src="persons.js"></script>
 </body>
 </html>

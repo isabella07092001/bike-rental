@@ -17,7 +17,7 @@ func main() {
 
 	srv := &http.Server{
 		Addr:              addr,
-		Handler:           handler.NewRouter("web", store.NewMemoryStore()),
+		Handler:           handler.NewRouter("web", store.NewMemoryStore(), store.NewPersonMemoryStore()),
 		ReadHeaderTimeout: 5 * time.Second,
 	}
 

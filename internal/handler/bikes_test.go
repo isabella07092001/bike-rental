@@ -31,7 +31,7 @@ func do(t *testing.T, router http.Handler, method, path, body string, out any) i
 }
 
 func newTestRouter() http.Handler {
-	return NewRouter("", store.NewMemoryStore())
+	return NewRouter("", store.NewMemoryStore(), store.NewPersonMemoryStore())
 }
 
 func TestBikeLifecycle(t *testing.T) {

@@ -2,7 +2,6 @@ package handler
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 
@@ -173,22 +172,4 @@ func decodeBikeInput(w http.ResponseWriter, r *http.Request) (bikeInput, error) 
 		return bikeInput{}, fmt.Errorf("%w: request body is not valid JSON", domain.ErrInvalid)
 	}
 	return in, nil
-}
-
-// writeError maps domain errors to HTTP status codes and writes {"error": "..."}.
-func writeError(w http.ResponseWriter, err error) {
-	status := http.StatusInternalServerError
-	switch {
-	case errors.Is(err, domain.ErrInvalid):
-		status = http.StatusBadRequest
-	case errors.Is(err, domain.ErrNotFound):
-		status = http.StatusNotFound
-	case errors.Is(err, domain.ErrConflict):
-		status = http.StatusConflict
-	}
-	msg := err.Error()
-	if status == http.StatusInternalServerError {
-		msg = "internal server error"
-	}
-	writeJSON(w, status, map[string]string{"error": msg})
 }

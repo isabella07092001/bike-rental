@@ -27,11 +27,11 @@ the domain layer and tested before the UI is built on top.
 
 ## Phase 2 – Person Management
 
-- [ ] Domain: `Person` (ID, name, contact data, identification number)
-- [ ] Store + API: CRUD for `/api/persons`
-- [ ] ID document upload & download (`multipart/form-data`, stored in memory)
-- [ ] Frontend: person list, create/edit form, ID document upload
-- [ ] Tests: validation (identification number required), upload handling
+- [x] Domain: `Person` (ID, first/last name, identification number, phone, archived)
+- [x] Store + API for `/api/persons`: create (with ID copy), read, update, archive, reactivate
+- [x] ID copy (PDF/JPG/PNG, ≤ 5 MB) required at creation; replace & view (`multipart/form-data`, in memory)
+- [x] Frontend: person list with search, create form with upload, edit, archive (no hard delete)
+- [x] Tests: validation (identification number required), upload handling (type, size, missing file)
 
 **Done when:** a person with identification number and uploaded ID copy can be created.
 

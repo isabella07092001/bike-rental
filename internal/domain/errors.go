@@ -8,4 +8,5 @@ var (
 	ErrInvalid  = errors.New("invalid input")
 	ErrNotFound = errors.New("not found")
 	ErrConflict = errors.New("conflict")
+	ErrTooLarge = errors.New("too large")
 )

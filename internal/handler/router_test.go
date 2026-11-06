@@ -13,7 +13,7 @@ import (
 )
 
 func TestHealth(t *testing.T) {
-	router := NewRouter(t.TempDir(), store.NewMemoryStore())
+	router := NewRouter(t.TempDir(), store.NewMemoryStore(), store.NewPersonMemoryStore())
 
 	rec := httptest.NewRecorder()
 	router.ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/api/health", nil))
@@ -34,7 +34,7 @@ func TestHealth(t *testing.T) {
 }
 
 func TestHealthRejectsPost(t *testing.T) {
-	router := NewRouter(t.TempDir(), store.NewMemoryStore())
+	router := NewRouter(t.TempDir(), store.NewMemoryStore(), store.NewPersonMemoryStore())
 
 	rec := httptest.NewRecorder()
 	router.ServeHTTP(rec, httptest.NewRequest(http.MethodPost, "/api/health", nil))
@@ -49,7 +49,7 @@ func TestServesStaticFrontend(t *testing.T) {
 	if err := os.WriteFile(filepath.Join(dir, "index.html"), []byte("<h1>Bike Rental</h1>"), 0o644); err != nil {
 		t.Fatalf("write index.html: %v", err)
 	}
-	router := NewRouter(dir, store.NewMemoryStore())
+	router := NewRouter(dir, store.NewMemoryStore(), store.NewPersonMemoryStore())
 
 	rec := httptest.NewRecorder()
 	router.ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/", nil))

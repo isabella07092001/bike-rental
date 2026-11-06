@@ -1,8 +1,11 @@
 // Small fetch wrapper for the Go JSON API. Throws an Error with the server's
-// {"error": "..."} message for non-2xx responses.
+// {"error": "..."} message for non-2xx responses. A FormData body is sent as
+// multipart/form-data (the browser sets the boundary); anything else as JSON.
 async function api(method, path, body) {
   const options = { method, headers: {} };
-  if (body !== undefined) {
+  if (body instanceof FormData) {
+    options.body = body;
+  } else if (body !== undefined) {
     options.headers["Content-Type"] = "application/json";
     options.body = JSON.stringify(body);
   }

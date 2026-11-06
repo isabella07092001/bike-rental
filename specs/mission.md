@@ -64,6 +64,6 @@ To be clarified with the stakeholders before or during implementation (ask rathe
 - What are the concrete hourly prices per category?
 - How are partial hours billed (e.g. 90 minutes → 1.5 h or rounded up to 2 h)? Is a 30-minute rental billed as half an hour or a full hour?
 - Can one reservation contain several bikes (e.g. a family rental)? *(Assumption: yes.)*
-- Which file types / sizes are allowed for the ID document upload?
+- ~~Which file types / sizes are allowed for the ID document upload?~~ → PDF, JPG, PNG up to 5 MB (see person-management spec)
 - May a bike be reserved back-to-back, or is a buffer between rentals needed?
 - Are there opening hours that restrict rental start and end times?
