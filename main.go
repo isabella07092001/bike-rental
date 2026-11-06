@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"bike-rental/internal/handler"
+	"bike-rental/internal/store"
 )
 
 func main() {
@@ -16,7 +17,7 @@ func main() {
 
 	srv := &http.Server{
 		Addr:              addr,
-		Handler:           handler.NewRouter("web"),
+		Handler:           handler.NewRouter("web", store.NewMemoryStore()),
 		ReadHeaderTimeout: 5 * time.Second,
 	}
 

@@ -28,3 +28,67 @@ nav a.active { color: #fff; border-bottom: 2px solid #fff; }
 .status.error::before { content: "● "; color: #ff9b9b; }
 
 main { max-width: 960px; margin: 0 auto; padding: 1.5rem; }
+
+h2 { margin-top: 0; }
+h3 { margin: 0 0 0.75rem; font-size: 1rem; }
+
+.card {
+  background: #fff;
+  border: 1px solid #dde3ea;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem;
+}
+.fields .wide { grid-column: 1 / -1; }
+
+label { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.85rem; color: #52606d; }
+.toolbar label { flex-direction: row; align-items: center; gap: 0.4rem; }
+
+input, select, button { font: inherit; }
+input, select {
+  padding: 0.4rem 0.5rem;
+  border: 1px solid #cbd2d9;
+  border-radius: 4px;
+  color: #1f2933;
+  background: #fff;
+}
+
+.buttons { display: flex; gap: 0.5rem; }
+button {
+  padding: 0.35rem 0.8rem;
+  border: 1px solid #cbd2d9;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+}
+button:hover { background: #f0f4f8; }
+button.primary { background: #1f6f50; border-color: #1f6f50; color: #fff; }
+button.primary:hover { background: #185a41; }
+button.danger { color: #b42318; }
+
+.error { color: #b42318; min-height: 1em; margin: 0.5rem 0; font-size: 0.9rem; }
+.toolbar { margin-bottom: 0.5rem; }
+
+table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #dde3ea; }
+th, td { text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid #edf0f3; }
+th { font-size: 0.8rem; text-transform: uppercase; color: #52606d; background: #f8fafc; }
+td.actions { white-space: nowrap; text-align: right; }
+td.actions button + button { margin-left: 0.4rem; }
+td.empty { color: #7b8794; text-align: center; }
+tr.retired td { color: #9aa5b1; }
+
+.badge { padding: 0.1rem 0.5rem; border-radius: 999px; font-size: 0.8rem; }
+.badge.available { background: #e3f8ec; color: #1f6f50; }
+.badge.maintenance { background: #fff4d6; color: #8a5a00; }
+.badge.retired { background: #eceff3; color: #616e7c; }
+
+@media (max-width: 640px) {
+  main { padding: 1rem; }
+  table { display: block; overflow-x: auto; }
+}

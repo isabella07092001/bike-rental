@@ -26,7 +26,45 @@
 
     <section id="bikes" class="page">
       <h2>Bikes</h2>
-      <p>Bike management – coming in Phase 1.</p>
+
+      <form id="bike-form" class="card" autocomplete="off">
+        <h3 id="bike-form-title">New bike</h3>
+        <input type="hidden" name="id">
+        <div class="fields">
+          <label>Name
+            <input name="name" required maxlength="100" placeholder="e.g. City-01">
+          </label>
+          <label>Category
+            <select name="category" required></select>
+          </label>
+          <label>Status
+            <select name="status">
+              <option value="available">Available</option>
+              <option value="maintenance">Maintenance</option>
+              <option value="retired">Retired</option>
+            </select>
+          </label>
+          <label class="wide">Description
+            <input name="description" maxlength="500" placeholder="Color, brand, notes (optional)">
+          </label>
+        </div>
+        <p id="bike-form-error" class="error" role="alert"></p>
+        <div class="buttons">
+          <button type="submit" class="primary">Save</button>
+          <button type="button" id="bike-cancel" hidden>Cancel</button>
+        </div>
+      </form>
+
+      <div class="toolbar">
+        <label><input type="checkbox" id="show-retired"> Show retired bikes</label>
+      </div>
+      <p id="bike-list-error" class="error" role="alert"></p>
+      <table>
+        <thead>
+          <tr><th>Name</th><th>Category</th><th>Price / h</th><th>Status</th><th>Description</th><th></th></tr>
+        </thead>
+        <tbody id="bike-rows"></tbody>
+      </table>
     </section>
 
     <section id="persons" class="page">
@@ -40,6 +78,8 @@
     </section>
   </main>
 
+  <script src="api.js"></script>
   <script src="app.js"></script>
+  <script src="bikes.js"></script>
 </body>
 </html>

@@ -16,12 +16,12 @@ the domain layer and tested before the UI is built on top.
 
 ## Phase 1 – Bike Management
 
-- [ ] Domain: `Bike` (ID, name/label, category, status), `Category` enum
+- [x] Domain: `Bike` (ID, name, category, status, description), `Category` enum
       (children's, city, mountain, racing) with hourly price per category
-- [ ] In-memory store: `Store` interface + thread-safe `MemoryStore` for bikes
-- [ ] API: CRUD for `/api/bikes`
-- [ ] Frontend: bike list, create/edit form, delete
-- [ ] Tests: domain validation, store (incl. `-race`), handlers
+- [x] In-memory store: `Store` interface + thread-safe `MemoryStore` for bikes
+- [x] API: create, read, update, retire for `/api/bikes`
+- [x] Frontend: bike list, create/edit form, retire (no hard delete)
+- [x] Tests: domain validation, store (incl. `-race`), handlers (`-race` pending: no C compiler)
 
 **Done when:** bikes of all four categories can be managed in the browser.
 

@@ -6,13 +6,16 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+
+	"bike-rental/internal/store"
 )
 
 // NewRouter wires all API routes and serves the static frontend from webDir.
-func NewRouter(webDir string) http.Handler {
+func NewRouter(webDir string, bikes store.BikeStore) http.Handler {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("GET /api/health", handleHealth)
+	NewBikeHandler(bikes).Register(mux)
 
 	mux.Handle("GET /", http.FileServer(http.Dir(webDir)))
 
