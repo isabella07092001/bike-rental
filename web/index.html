@@ -20,8 +20,35 @@
 
   <main>
     <section id="dashboard" class="page">
-      <h2>Dashboard</h2>
-      <p>Overview of the shop – coming in Phase 4.</p>
+      <div class="page-head">
+        <h2>Dashboard</h2>
+        <span id="dashboard-generated" class="muted"></span>
+      </div>
+      <p id="dashboard-error" class="error" role="alert"></p>
+
+      <div class="tiles">
+        <div class="tile"><span class="tile-value" id="tile-total">–</span><span class="tile-label">Bikes in fleet</span></div>
+        <div class="tile available"><span class="tile-value" id="tile-available">–</span><span class="tile-label">Available now</span></div>
+        <div class="tile rented"><span class="tile-value" id="tile-rented">–</span><span class="tile-label">Rented now</span></div>
+        <div class="tile maintenance"><span class="tile-value" id="tile-maintenance">–</span><span class="tile-label">In maintenance</span></div>
+      </div>
+
+      <h3 class="section-title">Fleet by category</h3>
+      <table>
+        <thead>
+          <tr><th>Category</th><th class="num">Total</th><th class="num">Available now</th><th class="num">Rented now</th><th class="num">Maintenance</th></tr>
+        </thead>
+        <tbody id="dashboard-fleet"></tbody>
+      </table>
+
+      <h3 class="section-title">Upcoming – next <span id="dashboard-days">7</span> days <span id="dashboard-upcoming-count" class="muted"></span></h3>
+      <table>
+        <thead>
+          <tr><th>Period</th><th>Person</th><th>Bikes</th><th class="num">Price</th></tr>
+        </thead>
+        <tbody id="dashboard-upcoming"></tbody>
+      </table>
+      <p><a href="#reservations">All reservations →</a></p>
     </section>
 
     <section id="bikes" class="page">
@@ -167,5 +194,6 @@
   <script src="bikes.js"></script>
   <script src="persons.js"></script>
   <script src="reservations.js"></script>
+  <script src="dashboard.js"></script>
 </body>
 </html>

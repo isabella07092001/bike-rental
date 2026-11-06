@@ -54,10 +54,10 @@ the domain layer and tested before the UI is built on top.
 
 ## Phase 4 – Dashboard
 
-- [ ] API: `GET /api/dashboard` with aggregated figures
-- [ ] Figures: bikes per category and status (available / rented), active reservations,
-      upcoming reservations (e.g. next 24 h), today's expected revenue
-- [ ] Frontend: dashboard as start page
+- [x] API: `GET /api/dashboard` with aggregated figures
+- [x] Fleet now: total, available, rented, in maintenance – overall and per category (retired excluded)
+- [x] Upcoming reservations of the next 7 days (no revenue, no warnings)
+- [x] Frontend: dashboard as start page, reloaded when opened
 
 **Done when:** Alice and Bob see the current state of the shop at a glance.
 

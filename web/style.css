@@ -119,3 +119,29 @@ button:disabled:hover { background: #fff; }
 .badge.phase-active { background: #e3f8ec; color: #1f6f50; }
 .badge.phase-completed { background: #eceff3; color: #616e7c; }
 .badge.phase-cancelled { background: #fde8e8; color: #9b1c1c; }
+
+/* Dashboard */
+.page-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.75rem;
+  margin: 0.5rem 0 1.5rem;
+}
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  background: #fff;
+  border: 1px solid #dde3ea;
+  border-left: 4px solid #9aa5b1;
+  border-radius: 8px;
+  padding: 0.9rem 1rem;
+}
+.tile.available { border-left-color: #1f6f50; }
+.tile.rented { border-left-color: #1e429f; }
+.tile.maintenance { border-left-color: #c27c0e; }
+.tile-value { font-size: 2rem; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+.tile-label { font-size: 0.85rem; color: #52606d; }
+.section-title { margin: 1.5rem 0 0.5rem; }
+th.num, td.num { text-align: right; font-variant-numeric: tabular-nums; }

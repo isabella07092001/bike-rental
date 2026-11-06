@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"bike-rental/internal/booking"
+	"bike-rental/internal/dashboard"
 	"bike-rental/internal/domain"
 	"bike-rental/internal/store"
 )
@@ -35,6 +36,7 @@ func NewRouter(webDir string, d Deps) http.Handler {
 	NewBikeHandler(d.Bikes, bookings.BikeHasOpenReservations).Register(mux)
 	NewPersonHandler(d.Persons, d.Now, bookings.PersonHasOpenReservations).Register(mux)
 	NewReservationHandler(bookings, d.Reservations, d.Bikes, d.Persons).Register(mux)
+	NewDashboardHandler(dashboard.NewBuilder(d.Bikes, d.Persons, d.Reservations, d.Now)).Register(mux)
 
 	mux.Handle("GET /", noCache(http.FileServer(http.Dir(webDir))))
 
