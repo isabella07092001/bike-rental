@@ -1,5 +1,7 @@
 # Mission
 
+Source: [stakeholder-input.md](stakeholder-input.md) (original input, unchanged).
+
 ## Purpose
 
 Build a **bike rental management system** for **Power Bike**, the bike rental shop owned by **Alice and Bob**.

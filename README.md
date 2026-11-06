@@ -1,49 +1,15 @@
-A bike rental management system for a bike rental shop owned by Alice and Bob.
+# Power Bike
 
-Functional Requirements
-- Dashboard
-- Bike Management
-- Person Management
-- Reservation Management
+Bike rental management prototype for **Power Bike**, the bike rental shop of Alice and Bob.
 
-Rules
-- every reservation must contain the identification number of the person renting the bikes
-and a copy of the identification document must be uploaded
-- bikes can be rented on an hourly basis (minimum rental duration is 30 minutes, maximal
-rental duration is two days), rental prices are calculated per hour
-- rental prices depend on the bike category: children's bike, city bike, mountain bike, racing bike
-- a reservation can only be cancelled up until 24 hours before the rental start
-
----
-
-# Power Bike – Running the Prototype
-
-Specs: [mission](specs/mission.md) · [tech stack](specs/tech-stack.md) · [roadmap](specs/roadmap.md)
+Specs: [stakeholder input](specs/stakeholder-input.md) · [mission](specs/mission.md) · [tech stack](specs/tech-stack.md)
+· [roadmap](specs/roadmap.md)
 · feature specs in [`specs/`](specs).
 
-## Requirements
+## Getting started
 
-- Go 1.27.3 or newer (see `go.mod`). No other dependencies.
-- A browser. The frontend is plain HTML/JS and is served by the Go server.
-
-## Start
-
-```bash
-go run .
-```
-
-Open <http://localhost:8080>. The app starts on the dashboard.
-
-To start with **demo data** (10 bikes, 4 customers with sample ID copies, reservations that are
-active, completed, upcoming and cancelled around the current time):
-
-```bash
-go run . -demo
-```
-
-Use another port with the `PORT` environment variable, e.g. `PORT=9090 go run .`.
-
-All data is kept **in memory only** and is lost when the server stops.
+See **[GETTING-STARTED.md](GETTING-STARTED.md)**: start the server with `go run . -demo`, then
+double-click **`open-app.html`** to open the app in your browser.
 
 ## Test
 
